@@ -21,7 +21,7 @@ wrangler.toml     Worker name and the two custom domains
 |---|---|---|
 | `paradiseprogramming.com` / `www.` | This site | this one |
 | `ledger.paradiseprogramming.com` | Paradise Ledger (private, not linked from this site) | `digital-check-register` |
-| *(simulator's address)* | Fire & Rescue Simulator | `Caroline-Fire-Rescue-Sim` |
+| `simulator.paradiseprogramming.com` | Fire & Rescue Simulator | `Caroline-Fire-Rescue-Sim` |
 
 Each app keeps its own subdomain and its own Worker. This site only links to them.
 
@@ -30,9 +30,8 @@ Each app keeps its own subdomain and its own Worker. This site only links to the
 Anything highlighted yellow on the page is a placeholder. Search `index.html` for `TODO(Jason)`:
 
 1. **Simulator description**: a sentence or two on what it does and who uses it.
-2. **Simulator link**: the real address (currently guessed as `https://sim.paradiseprogramming.com`).
-3. **About**: a few sentences in your own words.
-4. **Contact email**: `hello@paradiseprogramming.com` only works once step 4 below is done.
+2. **About**: a few sentences in your own words.
+3. **Contact email**: `hello@paradiseprogramming.com` only works once step 4 below is done.
    Use a different address if you prefer; it's in one place.
 
 When those are filled in, the `.todo` style at the bottom of `css/style.css` can stay (nothing uses it).
@@ -46,11 +45,11 @@ It's also courteous to let the chief and the pastor know their sites are listed 
 Cloudflare dashboard → **paradiseprogramming.com → DNS → Records**. If there's an `A`, `AAAA` or
 `CNAME` record named `paradiseprogramming.com` (shown as `@`) or `www`, note what it points to.
 
-- If the **simulator** is on the bare domain right now, move it to its own subdomain first
-  (e.g. `sim.paradiseprogramming.com`): in the simulator's Worker → **Settings → Domains & Routes**,
-  add the new custom domain, then remove the bare-domain one.
-- Delete any leftover parking or registrar records for `@` and `www`. Leave the `ledger` record
-  and any `MX`/`TXT` email records alone.
+- The simulator lives at `simulator.paradiseprogramming.com`, so it doesn't use either name.
+  If the simulator's Worker *also* has the bare domain or `www` under **Settings → Domains &
+  Routes**, remove those there first.
+- Delete any leftover parking or registrar records for `@` and `www`. Leave the `ledger` and
+  `simulator` records and any `MX`/`TXT` email records alone.
 
 ### 2. Connect this repo to a Worker
 

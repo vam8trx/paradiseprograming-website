@@ -1,0 +1,23 @@
+# Paradise Programming main website — one Worker that only serves the static
+# files in site/ (no Worker code, so it's free and site/_headers applies).
+# The other apps keep their own subdomains (ledger., the simulator's, …) and
+# their own Workers; this one only answers the bare domain and www.
+
+name = "paradiseprogramming-website"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+# Cloudflare creates the DNS records and certificates on the first deploy.
+# If either name already has a DNS record (or another Worker), remove that
+# first — see README, "Before the first deploy".
+routes = [
+  { pattern = "paradiseprogramming.com", custom_domain = true },
+  { pattern = "www.paradiseprogramming.com", custom_domain = true },
+]
+
+[assets]
+directory = "./site"
+not_found_handling = "404-page"
+
+[observability]
+enabled = true

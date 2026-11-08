@@ -70,10 +70,7 @@ Both addresses already show the site, and the page tells search engines the main
 
 ### 4. Make the contact email work
 
-**paradiseprogramming.com → Email → Email Routing**. If Email Routing is already on (the ledger
-may have turned it on), go to **Routing rules → Create address** → `hello` → action *Send to an
-email* → your Gmail. If it's off, turn it on first and let it add its DNS records. Gmail sends a
-confirmation link the first time.
+See **Email** below. The contact button uses `hello@paradiseprogramming.com`.
 
 ### 5. Tell Google
 
@@ -83,6 +80,49 @@ confirmation link the first time.
 
 Optional: **Analytics & Logs → Web Analytics** → add the site for free, cookie-free visitor counts.
 `_headers` already allows its script.
+
+## Email
+
+`hello@paradiseprogramming.com` is free: **Cloudflare Email Routing** receives mail and forwards
+it to Jason's Gmail, and Gmail sends *as* `hello@` through **Resend's** mail server. There's no
+separate mailbox; everything lives in Gmail. (To move to Google Workspace later, remove Email
+Routing and switch the `MX` records; nothing on the site changes.)
+
+### Receive: Cloudflare Email Routing
+
+1. **paradiseprogramming.com → DNS → Records**: check that there are no `MX` records. If there
+   are, something else already handles mail; sort that out first.
+2. **Compute → Email Service → Email Routing → Onboard Domain** → `paradiseprogramming.com` →
+   **Done**. Cloudflare adds its `MX`, SPF (`TXT`) and DKIM records itself.
+3. **Destination Addresses** → add the Gmail address → click the verify link Cloudflare emails.
+4. **Routing Rules → Create routing rule**: custom address `hello` → *Send to an email* → the Gmail.
+5. Optional: **Catch-all** → *Send to an email* → the Gmail, so any other `@paradiseprogramming.com`
+   address (or typo) still arrives.
+6. Test: from a different account (not the Gmail itself, which Gmail hides as a duplicate),
+   send to `hello@paradiseprogramming.com`.
+
+### Send: Gmail "Send mail as" through Resend
+
+1. **Resend → Domains → Add domain** → `paradiseprogramming.com`. Add the records it lists in
+   Cloudflare DNS (DKIM `resend._domainkey`, plus `MX` and SPF `TXT` on the `send` subdomain), or use
+   Resend's **Auto configure** with Cloudflare. These live on `send.` and `resend._domainkey`,
+   so they don't clash with Email Routing's records on the bare domain. Wait for **Verified**.
+2. **Resend → API Keys → Create API key**: name `Gmail send-as`, permission *Sending access*,
+   domain `paradiseprogramming.com`. Copy it; Resend shows it only once.
+3. **Gmail → Settings (gear) → See all settings → Accounts and Import → Send mail as → Add another
+   email address**:
+   - Name `Paradise Programming` (or your name), address `hello@paradiseprogramming.com`;
+     leave *Treat as an alias* ticked → Next.
+   - SMTP server `smtp.resend.com`, port `587`, username `resend`, password = the API key,
+     *Secured connection using TLS* → Add account.
+   - Gmail emails a confirmation to `hello@`; Email Routing forwards it back to the Gmail. Click
+     the link (or enter the code).
+4. Same screen → **When replying to a message**: *Reply from the same address the message was
+   sent to*. Optionally **make default** if every email should go out as `hello@`.
+5. Test: write a new email, pick `hello@` in **From**, send it to a different account, and check
+   it doesn't land in spam.
+
+Resend's free plan covers 3,000 emails a month (100 a day), plenty for one person's mail.
 
 ## Editing
 
